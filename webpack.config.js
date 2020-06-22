@@ -8,7 +8,7 @@ module.exports = {
   ],
   output: {
     path: `${__dirname}/dist/public`,
-    // publicPath: '/assets/',
+    publicPath: '/assets/',
   },
   module: {
     rules: [

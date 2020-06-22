@@ -9,7 +9,7 @@
     "build-server": "babel server --out-dir dist --source-maps inline && cp -r server/views dist/views",
     "build-app": "rm -rf dist && npm run build-front && npm run build-server",
     "start-server": "npx nodemon --exec npx babel-node server/bin/server.js",
-    "develop": "npx webpack-dev-server --open"
+    "develop": "npx webpack-dev-server"
   },
   "author": "",
   "license": "ISC",
