@@ -2,8 +2,16 @@ doctype html
 html.h-100(lang="en")
   head
     title binance
+    link(href="https://stackpath.bootstrapcdn.com/bootswatch/4.4.1/litera/bootstrap.min.css", rel="stylesheet", integrity="sha384-pLgJ8jZ4aoPja/9zBSujjzs7QbkTKvKw1+zfKuumQF9U+TH3xv09UUsRI52fS+A6", crossorigin="anonymous")
   body
-    h1 BTC:USD
-    h2= price.BTCUSDT
-    .output
+    div.container
+      h1 BTC:USD
+      h2= price.BTCUSDT
+      form(action='/posts' method='post')
+        .row.form-group
+          .col-sm
+            label.col-form-label
+              | Input
+            input.form-control(name='title' value='' placeholder='currency')
+      span.output
     script(src=`${domain}/assets/main.js`)
