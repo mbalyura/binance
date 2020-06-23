@@ -1,17 +1,23 @@
 {
-  "name": "binance",
+  "name": "binance-test",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "bin": {
+    "server": "dist/bin/server.js"
+  },
   "scripts": {
     "lint": "npx eslint .",
+    "build-server": "babel server --out-dir dist --source-maps inline && cp -r server/views dist/views && chmod +x dist/bin/server.js",
     "build-front": "npx webpack -p --env production",
-    "build-server": "babel server --out-dir dist --source-maps inline && cp -r server/views dist/views",
     "build-app": "rm -rf dist && npm run build-front && npm run build-server",
     "start-server": "npx nodemon --exec npx babel-node server/bin/server.js",
-    "develop": "npx webpack-dev-server"
+    "start-front": "npx webpack-dev-server",
+    "develop": "npm run start-server && npm run start-front",
+    "start": "dist/bin/server.js",
+    "postinstall": "npm run build-app"
   },
-  "author": "",
+  "author": "mbalyura <mbalyura@gmail.com>",
   "license": "ISC",
   "dependencies": {
     "node-binance-api": "^0.11.7",
@@ -19,7 +25,9 @@
     "express": "^4.17.1",
     "method-override": "^3.0.0",
     "morgan": "^1.10.0",
-    "pug": "^2.0.4"
+    "pug": "^2.0.4",
+    "socket.io": "^2.3.0",
+    "socket.io-client": "^2.3.0"
   },
   "devDependencies": {
     "@babel/polyfill": "^7.8.3",
