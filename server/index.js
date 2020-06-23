@@ -18,25 +18,16 @@ export default () => {
   app.set('views', path.join(__dirname, 'views'));
   app.use('/assets', express.static(path.join(__dirname, 'public')));
 
-  app.use(bodyParser.urlencoded({ extended: false }));
+  app.use(bodyParser.urlencoded({ extended: true }));
+  app.use(bodyParser.json());
 
   const binance = new Binance();
   const getPrices = () => binance.futuresPrices();
-  // binance.futuresMiniTickerStream('BTCUSDT', console.log);
-
-  app.get('/', (_req, res) => {
-    getPrices().then((price) => {
-      res.render('index', { price, domain });
-      console.log(price);
-    });
-  });
-
-  // app.post('/api', (req, res) => {
-  // const {} = req.body;
-  // });
+  const getCurrencies = (prices) => Object.keys(prices);// .map((c) => c.replace('USDT', ''));
+  const endpoints = binance.websockets.subscriptions();
 
   const server = app.listen(port, () => {
-    console.log(`Server has been started on port http://localhost:${port}`);
+    console.log(`Server has been started on http://localhost:${port}`);
   });
 
   const io = socket(server);
@@ -47,6 +38,21 @@ export default () => {
     });
   });
 
-  // binance.futuresMiniTickerStream('BTCUSDT', (data) => io.emit('newData', data));
-  binance.websockets.miniTicker((data) => io.emit('newData', data));
+  app.get('/', (_req, res) => {
+    getPrices().then((prices) => {
+      const currencies = getCurrencies(prices);
+      res.render('index', { currencies, domain });
+    });
+  });
+
+  app.post('/currency', (req, res) => {
+    console.log('req.body', req.body);
+    const { currency } = req.body;
+    binance.websockets.prevDay(currency, (_err, data) => {
+      // console.log('data', data);
+      console.log('endpoints', Object.keys(endpoints));
+      io.emit('newData', data);
+    });
+    res.status('200').end();
+  });
 };

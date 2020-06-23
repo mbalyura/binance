@@ -2,16 +2,18 @@ doctype html
 html.h-100(lang="en")
   head
     title binance
-    link(href="https://stackpath.bootstrapcdn.com/bootswatch/4.4.1/litera/bootstrap.min.css", rel="stylesheet", integrity="sha384-pLgJ8jZ4aoPja/9zBSujjzs7QbkTKvKw1+zfKuumQF9U+TH3xv09UUsRI52fS+A6", crossorigin="anonymous")
+    link(href="https://stackpath.bootstrapcdn.com/bootswatch/4.5.0/cyborg/bootstrap.min.css", rel="stylesheet", integrity="sha384-GKugkVcT8wqoh3M8z1lqHbU+g6j498/ZT/zuXbepz7Dc09/otQZxTimkEMTkRWHP", crossorigin="anonymous")
   body
-    div.container
-      h1 BTC:USD
-      h2= price.BTCUSDT
-      form(action='/posts' method='post')
-        .row.form-group
-          .col-sm
-            label.col-form-label
-              | Input
-            input.form-control(name='title' value='' placeholder='currency')
-      span.output
+    div.container.mt-5
+      h1 binance mon
+      h4 choose currency
+      form.curr-form.mt-3.mb-3
+        .form-row
+          .col-3
+            select(name="currency" id="selector").form-control-lg.w-100
+              each val in currencies
+                option= val
+          .col-3
+            button(type='submit').btn.btn-outline-success.btn-lg.ml-2 Follow
+      ul.output
     script(src=`${domain}/assets/main.js`)

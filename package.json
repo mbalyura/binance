@@ -13,18 +13,19 @@
     "build-app": "rm -rf dist && npm run build-front && npm run build-server",
     "start-server": "npx nodemon --exec npx babel-node server/bin/server.js",
     "start-front": "npx webpack-dev-server",
-    "develop": "npm run start-server && npm run start-front",
+    "develop": "npm run start-server & npm run start-front",
     "start": "dist/bin/server.js",
     "postinstall": "npm run build-app"
   },
   "author": "mbalyura <mbalyura@gmail.com>",
   "license": "ISC",
   "dependencies": {
-    "node-binance-api": "^0.11.7",
+    "axios": "^0.19.2",
     "body-parser": "^1.19.0",
     "express": "^4.17.1",
     "method-override": "^3.0.0",
     "morgan": "^1.10.0",
+    "node-binance-api": "^0.11.7",
     "pug": "^2.0.4",
     "socket.io": "^2.3.0",
     "socket.io-client": "^2.3.0"
