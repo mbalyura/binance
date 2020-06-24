@@ -14,8 +14,8 @@ const followHandle = (e) => {
 };
 
 const unfollowHandle = (currency) => () => {
-  const liToUnfollow = document.querySelector(`.${currency}`);
-  liToUnfollow.parentNode.removeChild(liToUnfollow);
+  const liToRemove = document.querySelector(`.${currency}`);
+  liToRemove.parentNode.removeChild(liToRemove);
   axios.delete('/currency', { data: { currency } });
 };
 
@@ -25,13 +25,13 @@ const updateCurrencyList = (currency, price) => {
   const li = document.querySelector(`.${currency}`);
   if (li) {
     const oldSpan = li.querySelector('span');
-    oldSpan.innerHTML = `${currency}: ${price}` || '...';
+    oldSpan.innerHTML = `${currency}: ${price}$` || '...';
   } else {
     const newLi = document.createElement('li');
     newLi.classList.add(`${currency}`);
 
     const span = document.createElement('span');
-    span.innerHTML = `${currency}: ${price}` || '...';
+    span.innerHTML = `${currency}: ${price}$` || '...';
 
     const button = document.createElement('button');
     button.classList.add('btn', 'btn-outline-danger', 'm-2');
@@ -46,4 +46,4 @@ const updateCurrencyList = (currency, price) => {
 
 socket()
   .on('connect', () => console.warn('connected to websocket server'))
-  .on('newData', ({ symbol, close }) => updateCurrencyList(symbol, Number(close)));
+  .on('newData', ({ symbol, close }) => updateCurrencyList(symbol.replace('USDT', ''), Number(close)));

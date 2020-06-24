@@ -22,7 +22,7 @@ export default () => {
 
   const binance = new Binance();
   const getPrices = () => binance.futuresPrices();
-  const getCurrencies = (prices) => Object.keys(prices);// .map((curr) => curr.replace('USDT', ''));
+  const getCurrenciesList = (prices) => Object.keys(prices).map((curr) => curr.replace('USDT', ''));
   const socketSubs = binance.websockets.subscriptions();
 
   const server = app.listen(port, () => {
@@ -39,14 +39,16 @@ export default () => {
 
   app.get('/', (_req, res) => {
     getPrices().then((prices) => {
-      const currencies = getCurrencies(prices);
+      const currencies = getCurrenciesList(prices);
       res.render('index', { currencies, domain });
     });
   });
 
   app.post('/currency', (req, res) => {
     const { currency } = req.body;
-    binance.websockets.prevDay(currency, (_err, data) => {
+    console.log('currency', currency);
+    const priceCode = `${currency}USDT`;
+    binance.websockets.prevDay(priceCode, (_err, data) => {
       console.log('endpoints', Object.keys(socketSubs));
       io.emit('newData', data);
     });
@@ -55,8 +57,10 @@ export default () => {
 
   app.delete('/currency', (req, res) => {
     const { currency } = req.body;
-    const resp = binance.websockets.terminate(`${currency.toLowerCase()}@ticker`);
-    console.log('resp', resp);
+    console.log('currency', currency);
+    const tickerCode = `${currency.toLowerCase()}usdt@ticker`;
+    const websocketsResp = binance.websockets.terminate(tickerCode);
+    console.log('websocketsResp', websocketsResp);
     res.status('200').end();
   });
 };
