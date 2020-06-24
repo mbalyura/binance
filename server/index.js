@@ -13,18 +13,17 @@ const port = process.env.PORT || 5000;
 
 export default () => {
   const app = express();
-  app.use(morgan(':method :url :status'));
   app.set('view engine', 'pug');
   app.set('views', path.join(__dirname, 'views'));
+  app.use(morgan(':method :url :status'));
   app.use('/assets', express.static(path.join(__dirname, 'public')));
-
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(bodyParser.json());
 
   const binance = new Binance();
   const getPrices = () => binance.futuresPrices();
-  const getCurrencies = (prices) => Object.keys(prices);// .map((c) => c.replace('USDT', ''));
-  const endpoints = binance.websockets.subscriptions();
+  const getCurrencies = (prices) => Object.keys(prices);// .map((curr) => curr.replace('USDT', ''));
+  const socketSubs = binance.websockets.subscriptions();
 
   const server = app.listen(port, () => {
     console.log(`Server has been started on http://localhost:${port}`);
@@ -46,13 +45,18 @@ export default () => {
   });
 
   app.post('/currency', (req, res) => {
-    console.log('req.body', req.body);
     const { currency } = req.body;
     binance.websockets.prevDay(currency, (_err, data) => {
-      // console.log('data', data);
-      console.log('endpoints', Object.keys(endpoints));
+      console.log('endpoints', Object.keys(socketSubs));
       io.emit('newData', data);
     });
+    res.status('200').end();
+  });
+
+  app.delete('/currency', (req, res) => {
+    const { currency } = req.body;
+    const resp = binance.websockets.terminate(`${currency.toLowerCase()}@ticker`);
+    console.log('resp', resp);
     res.status('200').end();
   });
 };

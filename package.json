@@ -7,6 +7,7 @@
     "server": "dist/bin/server.js"
   },
   "scripts": {
+    "inst": "npm install",
     "lint": "npx eslint .",
     "build-server": "babel server --out-dir dist --source-maps inline && cp -r server/views dist/views && chmod +x dist/bin/server.js",
     "build-front": "npx webpack -p --env production",
